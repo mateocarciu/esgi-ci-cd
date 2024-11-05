@@ -7,6 +7,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4 # Récupère le contenu du dépôt correspondant au commit du workflow en cours
       - run: |
-          sudo apt-get update
-          sudo apt-get install --yes cowsay
-      - run: cat README.md | cowsay
+          npm install
+          npm run lint
+      - run: cat README.md
