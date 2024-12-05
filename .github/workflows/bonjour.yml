@@ -4,9 +4,10 @@ on:
 jobs:
   dire_bonjour:
     runs-on: ubuntu-22.04
+    container:
+      image: ghcr.io/dduportal/esgi-gitpod
+      options: --user=root
     steps:
       - uses: actions/checkout@v4 # Récupère le contenu du dépôt correspondant au commit du workflow en cours
-      - run: |
-          npm install
-          npm run lint
-      - run: cat README.md
+      - run: npm clean-install
+      - run: npm run lint
