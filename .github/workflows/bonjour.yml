@@ -1,29 +1,19 @@
 # bonjour.yml
 name: Bonjour
 on:
-  push:  # Déclenche le workflow lors des pushs
-    branches:
-      - main  # Limite le déclenchement aux pushs sur la branche "main"
-
+  - push
 jobs:
   dire_bonjour:
     runs-on: ubuntu-22.04
     env:
       IMAGE_NAME: "mynode"
     steps:
-      # Étape 1 : Récupérer le contenu du dépôt
-      - name: Checkout code
-        uses: actions/checkout@v4
-      
-      # Étape 2 : Lint avec Hadolint
+      - uses: actions/checkout@v4 # Récupère le contenu du dépôt correspondant au commit du workflow en cours
+      # Étape de lint avec Hadolint
+      - uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
       - name: Lint Dockerfile
-        run: |
-          hadolint Dockerfile || echo "Hadolint warnings detected"
-      
-      # Étape 3 : Construire l'image Docker
-      - name: Build Docker image
-        run: docker image build --tag "${IMAGE_NAME}" ./
-
-      # Étape 4 : Exécuter des vérifications avec l'image Docker
-      - name: Run npm lint
-        run: docker container run "${IMAGE_NAME}" npm run lint
+        run: hadolint Dockerfile || echo "Hadolint warnings detected"
+      - run: docker image build --tag="${IMAGE_NAME}" ./
+      - run: docker container run "${IMAGE_NAME}" npm run lint
